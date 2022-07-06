@@ -30,12 +30,17 @@ class LipMotionGenerator(object):
             self.__class__.__first_init = False
 
     def Enable(self):
-        self.enabled = True
-        self.motionQueue.queue.clear()
+        if self.audioStream is None:
+            print("Audio Stream not set, cannot enable Lip Motion Generator.")
+            return False
+        else:
+            self.enabled = True
+            self.motionQueue.queue.clear()
 
-        t = threading.Thread(target=self.GenerateLipMotion)
-        t.start()
-        print("Enable Lip Motion Generator.")
+            t = threading.Thread(target=self.GenerateLipMotion)
+            t.start()
+            print("Enable Lip Motion Generator.")
+            return True
 
     def Disable(self):
         self.enabled = False

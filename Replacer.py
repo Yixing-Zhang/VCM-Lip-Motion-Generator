@@ -1,4 +1,5 @@
 import json
+import threading
 
 import NetworkManager
 import LipMotionGenerator
@@ -40,8 +41,11 @@ class Replacer(object):
     def Enable(self):
         self.enabled = True
         self.frame_count = 0
-        self.lipMotionGenerator.Enable()
-        print("Enable Replacer.")
+        result = self.lipMotionGenerator.Enable()
+        if result:
+            print("Enable Replacer.")
+        else:
+            print("Replacer Enabling Failed.")
 
     def Disable(self):
         self.enabled = False
@@ -50,7 +54,8 @@ class Replacer(object):
         print("Disable Replacer.")
 
     def start(self):
-        self.ReplaceAndForward()
+        t = threading.Thread(target=self.ReplaceAndForward)
+        t.start()
         print("Start Replacer.")
 
     def Terminate(self):
