@@ -46,6 +46,22 @@ class NetworkManager(object):
 
             self.__class__.__first_init = False
 
+    def __init__(self):
+        if self.__first_init:
+            self.host = '127.0.0.1'
+            self.pktlen = 2048
+
+            self.sendPort = 1251
+            self.receivePort = 1250
+
+            self.sendSock = socket(AF_INET, SOCK_DGRAM)
+            self.sendSock.bind(('127.0.0.1', 1251))
+
+            self.receiveSock = socket(AF_INET, SOCK_DGRAM)
+            self.receiveSock.bind(('127.0.0.1', 1250))
+
+            self.__class__.__first_init = False
+
     def Receive(self):
         return self.receiveSock.recvfrom(self.pktlen)
 
