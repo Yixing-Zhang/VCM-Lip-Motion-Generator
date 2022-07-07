@@ -55,7 +55,7 @@ class LipMotionGenerator(object):
             print("Disable the generation first before changing audio stream.")
 
     def GetLipMotionData(self):
-        if self.motionQueue.empty():
+        if not self.motionQueue.empty():
             return self.motionQueue.get_nowait()
         else:
             return None

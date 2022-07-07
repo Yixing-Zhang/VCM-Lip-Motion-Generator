@@ -69,7 +69,7 @@ class Replacer(object):
 
     def ReplaceAndForward(self):
         # 得想办法加入多线程操作，考虑写一个UI。在这个函数运行的同时能通过UI来Enable和Disable，开启和关闭替换原始数据
-        print("Started Forwarding.")
+        print("Started Forwarding.\n", end='')
         generatedData = None
         while not self.terminated:
             # Read live motion data from Rokoko
@@ -92,4 +92,4 @@ class Replacer(object):
             # data = json.dumps(data).encode()
             # self.networkManager.Send(data)
         self.networkManager.Terminate()
-        print("Terminated Replacer.")
+        print("Terminated Replacer.\n", end='')
