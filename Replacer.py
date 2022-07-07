@@ -17,6 +17,8 @@ class Replacer(object):
     networkManager = None
     lipMotionGenerator = None
 
+    forwardThread = None
+
     frame_count = 0
     enabled = False
     terminated = False
@@ -30,6 +32,7 @@ class Replacer(object):
         if self.__first_init:
             self.networkManager = NetworkManager.NetworkManager()
             self.lipMotionGenerator = LipMotionGenerator.LipMotionGenerator()
+            self.forwardThread = threading.Thread(target=self.ReplaceAndForward)
             self.frame_count = 0
             self.enabled = False
             self.terminated = False
@@ -43,7 +46,7 @@ class Replacer(object):
         self.frame_count = 0
         result = self.lipMotionGenerator.Enable()
         if result:
-            print("Enable Replacer.")
+            print("Enabled Replacer.")
         else:
             print("Replacer Enabling Failed.")
 
@@ -51,28 +54,27 @@ class Replacer(object):
         self.enabled = False
         self.frame_count = 0
         self.lipMotionGenerator.Disable()
-        print("Disable Replacer.")
+        print("Disabled Replacer.")
 
     def start(self):
-        t = threading.Thread(target=self.ReplaceAndForward)
-        t.start()
-        print("Start Replacer.")
+        self.forwardThread.start()
+        print("Started Replacer.")
 
     def Terminate(self):
-        self.Disable()
+        print("Terminating Replacer.")
+        if self.enabled:
+            self.Disable()
         self.terminated = True
-        print("Terminate Replacer.")
+        self.forwardThread.join()
 
     def ReplaceAndForward(self):
         # 得想办法加入多线程操作，考虑写一个UI。在这个函数运行的同时能通过UI来Enable和Disable，开启和关闭替换原始数据
+        print("Started Forwarding.")
         generatedData = None
-        while True:
-            if self.terminated:
-                break
-
+        while not self.terminated:
             # Read live motion data from Rokoko
-            data, addr = self.networkManager.Receive()
-            data = json.loads(data)
+            # data, addr = self.networkManager.Receive()
+            # data = json.loads(data)
             # print(data)
 
             # If to replace
@@ -82,11 +84,12 @@ class Replacer(object):
                     generatedData = self.lipMotionGenerator.GetLipMotionData()
 
                 # Replace live motion facial data with generated data
-                data["scene"]["actors"][0]["face"] = generatedData["scene"]["actors"][0]["face"]
-                # print(data)
+                # if generatedData is not None:
+                #     data["scene"]["actors"][0]["face"] = generatedData["scene"]["actors"][0]["face"]
+                #     print(data)
 
             # Send final motion data
-            data = json.dumps(data).encode()
-            self.networkManager.Send(data)
-
+            # data = json.dumps(data).encode()
+            # self.networkManager.Send(data)
         self.networkManager.Terminate()
+        print("Terminated Replacer.")

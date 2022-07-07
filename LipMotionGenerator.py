@@ -39,13 +39,13 @@ class LipMotionGenerator(object):
 
             t = threading.Thread(target=self.GenerateLipMotion)
             t.start()
-            print("Enable Lip Motion Generator.")
+            print("Enabled Lip Motion Generator.")
             return True
 
     def Disable(self):
         self.enabled = False
         self.motionQueue.queue.clear()
-        print("Disable Lip Motion Generator.")
+        print("Disabled Lip Motion Generator.")
 
     def SetAudioStream(self, audio):
         if not self.enabled:
@@ -55,7 +55,10 @@ class LipMotionGenerator(object):
             print("Disable the generation first before changing audio stream.")
 
     def GetLipMotionData(self):
-        return self.motionQueue.get_nowait()
+        if self.motionQueue.empty():
+            return self.motionQueue.get_nowait()
+        else:
+            return None
 
     def GenerateLipMotion(self):
         while True:
