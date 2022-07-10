@@ -10,9 +10,10 @@ if __name__ == '__main__':
     replacer.start()
 
     # 用UI控制Enable和disable替换功能，以及更改audio stream，和结束程序
-    audio = None
+    audio = 1
     replacer.SetAudioStream(audio)
     replacer.Enable()
+    time.sleep(1)
     replacer.Disable()
     replacer.Terminate()
 

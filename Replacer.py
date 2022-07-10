@@ -1,5 +1,6 @@
 import json
 import threading
+import time
 
 import NetworkManager
 import LipMotionGenerator
@@ -82,6 +83,7 @@ class Replacer(object):
                 # Read generated motion data
                 if self.frame_count % 5 == 0:
                     generatedData = self.lipMotionGenerator.GetLipMotionData()
+                    # print("Generated Data: ", generatedData, "\n", end='')
 
                 # Replace live motion facial data with generated data
                 # if generatedData is not None:

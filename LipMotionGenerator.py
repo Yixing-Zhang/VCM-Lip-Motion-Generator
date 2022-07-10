@@ -1,5 +1,6 @@
 from queue import Queue
 import threading
+import time
 
 
 class LipMotionGenerator(object):
@@ -13,6 +14,7 @@ class LipMotionGenerator(object):
 
     enabled = False
     motionQueue = None
+    generateThread = None
     lock = None
 
     audioStream = None
@@ -24,8 +26,9 @@ class LipMotionGenerator(object):
 
     def __init__(self):
         if self.__first_init:
-            self.motionQueue = Queue(150)
+            self.motionQueue = Queue(1000)
             self.enabled = False
+            self.generateThread = threading.Thread(target=self.GenerateLipMotion)
             self.lock = threading.Lock()
             self.__class__.__first_init = False
 
@@ -37,14 +40,14 @@ class LipMotionGenerator(object):
             self.enabled = True
             self.motionQueue.queue.clear()
 
-            t = threading.Thread(target=self.GenerateLipMotion)
-            t.start()
+            self.generateThread.start()
             print("Enabled Lip Motion Generator.")
             return True
 
     def Disable(self):
         self.enabled = False
         self.motionQueue.queue.clear()
+        self.generateThread.join()
         print("Disabled Lip Motion Generator.")
 
     def SetAudioStream(self, audio):
@@ -61,9 +64,7 @@ class LipMotionGenerator(object):
             return None
 
     def GenerateLipMotion(self):
-        while True:
-            if not self.enabled:
-                break
+        while self.enabled:
             # lipMotion is a Json to better contain just 52 blendshapes (or even better to be only blendshapes
             # related to lip motion), other data fields are useless
 
@@ -71,8 +72,11 @@ class LipMotionGenerator(object):
             audio = self.audioStream
 
             # 所有blendshapes记得乘100，rokoko里blendshapes的范围是0-100
-            lipMotion = {}
+            lipMotion = {"a": 1}
+            # print(lipMotion)
 
             # Logic for generating lip motion
 
             self.motionQueue.put_nowait(lipMotion)
+
+            time.sleep(1/30)
