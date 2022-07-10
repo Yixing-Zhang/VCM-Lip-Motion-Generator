@@ -50,6 +50,7 @@ class Form(QDialog):
     def whichbtn(self, btn):
         if btn.text() == 'Terminate':
             self.Replacer.Terminate()
+            self.close()
 
     def selectionchange(self):
         if self.cb.currentText() != '--':
@@ -57,7 +58,7 @@ class Form(QDialog):
             for i in range(p.get_device_count()):
                 if p.get_device_info_by_index(i)['name'] == self.cb.currentText():
                     break
-            stream = p.open(format=pyaudio.paInt16, channels=2, rate=44100,
+            stream = p.open(format=pyaudio.paInt16, channels=1, rate=44100,
                             frames_per_buffer=1024, input=True, input_device_index=i)
             self.Replacer.SetAudioStream(audio=stream)
 

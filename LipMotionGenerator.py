@@ -76,7 +76,5 @@ class LipMotionGenerator(object):
             # print(lipMotion)
 
             # Logic for generating lip motion
-
-            self.motionQueue.put_nowait(lipMotion)
-
-            time.sleep(1/30)
+            if not self.motionQueue.full():
+                self.motionQueue.put_nowait(lipMotion)
