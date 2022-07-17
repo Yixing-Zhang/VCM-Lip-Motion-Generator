@@ -93,5 +93,7 @@ class Replacer(object):
             # Send final motion data
             data = json.dumps(data).encode()
             self.networkManager.Send(data)
+            self.frame_count += 1
+            self.frame_count %= 5
         self.networkManager.Terminate()
         print("Terminated Replacer.\n", end='')
