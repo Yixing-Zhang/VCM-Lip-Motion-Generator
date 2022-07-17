@@ -62,7 +62,7 @@ class Replacer(object):
         self.enabled = not result
         return result
 
-    def start(self):
+    def Start(self):
         self.forwardThread.start()
         print("Started Replacer.")
 

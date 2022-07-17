@@ -12,7 +12,7 @@ class Form(QDialog):
         self.setWindowTitle("choose")
 
         self.Replacer = Replacer.Replacer()
-        self.Replacer.start()
+        self.Replacer.Start()
 
         self.btn1 = QPushButton("Enable")
         self.btn1.setCheckable(True)
