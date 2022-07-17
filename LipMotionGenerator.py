@@ -1,7 +1,7 @@
 from queue import Queue
 import threading
 import time
-
+import pyaudio
 
 class LipMotionGenerator(object):
     """
@@ -40,8 +40,22 @@ class LipMotionGenerator(object):
             self.enabled = True
             self.motionQueue.queue.clear()
 
+            self.CHUNK = 1470
+            FORMAT = pyaudio.paInt16
+            CHANNELS = 1
+            RATE = 44100
+
+            p = pyaudio.PyAudio()
+            self.stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=self.CHUNK,
+                        input_device_index=self.audioStream)
             self.generateThread.start()
             print("Enabled Lip Motion Generator.")
+            
+
             return True
 
     def Disable(self):
@@ -67,9 +81,9 @@ class LipMotionGenerator(object):
         while self.enabled:
             # lipMotion is a Json to better contain just 52 blendshapes (or even better to be only blendshapes
             # related to lip motion), other data fields are useless
-
+        
             # Audio Stream
-            audio = self.audioStream
+            audio_data = self.stream.read(self.CHUNK)
 
             # 所有blendshapes记得乘100，rokoko里blendshapes的范围是0-100
             lipMotion = {"a": 1}
