@@ -2,7 +2,9 @@ from queue import Queue
 import threading
 import time
 import pyaudio
+import numpy as np
 
+from voca.utils.inference import inference_np
 class LipMotionGenerator(object):
     """
     This class generates lip motion data.
@@ -26,11 +28,15 @@ class LipMotionGenerator(object):
 
     def __init__(self):
         if self.__first_init:
-            self.motionQueue = Queue(1000)
+            self.motionQueue = Queue(10000)
             self.enabled = False
             self.generateThread = threading.Thread(target=self.GenerateLipMotion)
             self.lock = threading.Lock()
+            self.ds_fname = "xxxx"
+            self.tf_model_fname = "xxxx"
+
             self.__class__.__first_init = False
+
 
     def Enable(self):
         if self.audioStream is None:
@@ -39,19 +45,6 @@ class LipMotionGenerator(object):
         else:
             self.enabled = True
             self.motionQueue.queue.clear()
-
-            self.CHUNK = 1470
-            FORMAT = pyaudio.paInt16
-            CHANNELS = 1
-            RATE = 44100
-
-            p = pyaudio.PyAudio()
-            self.stream = p.open(format=FORMAT,
-                        channels=CHANNELS,
-                        rate=RATE,
-                        input=True,
-                        frames_per_buffer=self.CHUNK,
-                        input_device_index=self.audioStream)
             self.generateThread.start()
             print("Enabled Lip Motion Generator.")
             
@@ -83,12 +76,13 @@ class LipMotionGenerator(object):
             # related to lip motion), other data fields are useless
         
             # Audio Stream
-            audio_data = self.stream.read(self.CHUNK)
-
+            audio_data = self.audioStream.read(22050)
+            decode_data = np.frombuffer(audio_data, 'int16')
+            lipMotion = inference_np(self.tf_model_fname, self.ds_fname, decode_data, 44100)
+            
             # 所有blendshapes记得乘100，rokoko里blendshapes的范围是0-100
-            lipMotion = {"a": 1}
             # print(lipMotion)
-
+            
             # Logic for generating lip motion
             if not self.motionQueue.full():
                 self.motionQueue.put_nowait(lipMotion)
