@@ -43,19 +43,24 @@ class Replacer(object):
         self.lipMotionGenerator.SetAudioStream(audio)
 
     def Enable(self):
-        self.enabled = True
         self.frame_count = 0
         result = self.lipMotionGenerator.Enable()
         if result:
             print("Enabled Replacer.")
         else:
             print("Replacer Enabling Failed.")
+        self.enabled = result
+        return result
 
     def Disable(self):
-        self.enabled = False
         self.frame_count = 0
-        self.lipMotionGenerator.Disable()
-        print("Disabled Replacer.")
+        result = self.lipMotionGenerator.Disable()
+        if result:
+            print("Disabled Replacer.")
+        else:
+            print("Replacer Disabling Failed.")
+        self.enabled = not result
+        return result
 
     def start(self):
         self.forwardThread.start()

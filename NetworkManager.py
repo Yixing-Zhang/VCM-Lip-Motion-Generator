@@ -12,7 +12,7 @@ class NetworkManager(object):
 
     # UDP Networking
     host = '127.0.0.1'
-    pktlen = 2048
+    pktLen = 2048
 
     # Ports
     sendPort = 1251
@@ -30,40 +30,24 @@ class NetworkManager(object):
             cls.__species = object.__new__(cls)
         return cls.__species
 
-    def __init__(self, host, pktlen, sendPort, receivePort):
+    def __init__(self, host='127.0.0.1', pktLen=2048, sendPort=1251, receivePort=1250):
         if self.__first_init:
             self.host = host
-            self.pktlen = pktlen
+            self.pktLen = pktLen
 
             self.sendPort = sendPort
             self.receivePort = receivePort
 
             self.sendSock = socket(AF_INET, SOCK_DGRAM)
-            self.sendSock.bind((host, sendPort))
+            self.sendSock.bind((self.host, self.sendPort))
 
             self.receiveSock = socket(AF_INET, SOCK_DGRAM)
-            self.receiveSock.bind((host, receivePort))
-
-            self.__class__.__first_init = False
-
-    def __init__(self):
-        if self.__first_init:
-            self.host = '127.0.0.1'
-            self.pktlen = 2048
-
-            self.sendPort = 1251
-            self.receivePort = 1250
-
-            self.sendSock = socket(AF_INET, SOCK_DGRAM)
-            self.sendSock.bind(('127.0.0.1', 1251))
-
-            self.receiveSock = socket(AF_INET, SOCK_DGRAM)
-            self.receiveSock.bind(('127.0.0.1', 1250))
+            self.receiveSock.bind((self.host, self.receivePort))
 
             self.__class__.__first_init = False
 
     def Receive(self):
-        return self.receiveSock.recvfrom(self.pktlen)
+        return self.receiveSock.recvfrom(self.pktLen)
 
     def Send(self, data):
         self.sendSock.sendto(data, self.local)
@@ -74,4 +58,3 @@ class NetworkManager(object):
         print("Closed Send Socket")
         self.receiveSock.close()
         print("Closed Receive Socket")
-

@@ -41,11 +41,19 @@ class Form(QDialog):
 
     def btnstate(self):
         if self.btn1.isChecked():
-            self.btn1.setText("Enable")
-            self.Replacer.Disable()
+            if self.Replacer.Disable():
+                self.btn1.setText("Enable")
+                self.btn1.setChecked(True)
+            else:
+                self.btn1.setText("Disable")
+                self.btn1.setChecked(False)
         else:
-            self.btn1.setText("Disable")
-            self.Replacer.Enable()
+            if self.Replacer.Enable():
+                self.btn1.setText("Disable")
+                self.btn1.setChecked(False)
+            else:
+                self.btn1.setText("Enable")
+                self.btn1.setChecked(True)
 
     def whichbtn(self, btn):
         if btn.text() == 'Terminate':

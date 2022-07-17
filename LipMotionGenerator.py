@@ -49,6 +49,7 @@ class LipMotionGenerator(object):
         self.motionQueue.queue.clear()
         self.generateThread.join()
         print("Disabled Lip Motion Generator.")
+        return True
 
     def SetAudioStream(self, audio):
         if not self.enabled:
