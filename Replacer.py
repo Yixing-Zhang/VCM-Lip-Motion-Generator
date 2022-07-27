@@ -87,8 +87,8 @@ class Replacer(object):
 
                 # Replace live motion facial data with generated data
                 if generatedData is not None:
-                     data["scene"]["actors"][0]["face"] = generatedData
-                     print(data)
+                    data["scene"]["actors"][0]["face"] = generatedData
+                    print(data)
 
             # Send final motion data
             data = json.dumps(data).encode()
