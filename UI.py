@@ -67,7 +67,7 @@ class Form(QDialog):
                 if p.get_device_info_by_index(i)['name'] == self.cb.currentText():
                     break
             stream = p.open(format=pyaudio.paInt16, channels=1, rate=44100,
-                            frames_per_buffer=1024, input=True, input_device_index=i)
+                            frames_per_buffer=14700, input=True, input_device_index=i)
             self.Replacer.SetAudioStream(audio=stream)
 
 
