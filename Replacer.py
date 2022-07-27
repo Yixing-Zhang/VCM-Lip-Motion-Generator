@@ -77,11 +77,20 @@ class Replacer(object):
         # 得想办法加入多线程操作，考虑写一个UI。在这个函数运行的同时能通过UI来Enable和Disable，开启和关闭替换原始数据
         print("Started Forwarding.\n", end='')
         generatedData = None
+        timeout = time.time() + 5
+
         while not self.terminated:
             # Read live motion data from Rokoko
             data, addr = self.networkManager.Receive()
             if data is None:
+                if time.time() > timeout:
+                    print("No incoming motion data. Please check Rokoko Studio live streaming configuration.\n", end='')
+                    if self.enabled:
+                        print("Timeout after no receiving for 5 seconds. Disabling replacer.")
+                        self.Disable()
                 continue
+                
+            timeout = time.time() + 5
             data = json.loads(data)
             # print(data)
 
