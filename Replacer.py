@@ -79,8 +79,10 @@ class Replacer(object):
         generatedData = None
         while not self.terminated:
             # Read live motion data from Rokoko
-            # data, addr = self.networkManager.Receive()
-            # data = json.loads(data)
+            data, addr = self.networkManager.Receive()
+            if data is None:
+                continue
+            data = json.loads(data)
             # print(data)
 
             # If to replace
@@ -88,16 +90,16 @@ class Replacer(object):
                 # Read generated motion data
                 if self.frame_count % 5 == 0:
                     generatedData = self.lipMotionGenerator.GetLipMotionData()
-                    # print("Generated Data: ", generatedData, "\n", end='')
+                    print("Generated Data: ", generatedData, "\n", end='')
 
                 # Replace live motion facial data with generated data
-                # if generatedData is not None:
-                #     data["scene"]["actors"][0]["face"] = generatedData["scene"]["actors"][0]["face"]
-                #     print(data)
+                if generatedData is not None:
+                    data["scene"]["actors"][0]["face"] = generatedData
+                    print(data)
 
             # Send final motion data
-            # data = json.dumps(data).encode()
-            # self.networkManager.Send(data)
+            data = json.dumps(data).encode()
+            self.networkManager.Send(data)
             self.frame_count += 1
             self.frame_count %= 5
         self.networkManager.Terminate()
