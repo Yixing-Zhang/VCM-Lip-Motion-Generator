@@ -1,4 +1,5 @@
 from socket import *
+import select
 
 
 class NetworkManager(object):
@@ -63,7 +64,13 @@ class NetworkManager(object):
             self.__class__.__first_init = False
 
     def Receive(self):
-        return self.receiveSock.recvfrom(self.pktlen)
+        data = None
+        read_sockets, write_sockets, error_sockets = select.select([self.receiveSock], [], [])
+        for sock in read_sockets:
+            # incoming message from remote server
+            if sock == self.receiveSock:
+                data = sock.recvfrom(self.pktlen)
+        return data
 
     def Send(self, data):
         self.sendSock.sendto(data, self.local)

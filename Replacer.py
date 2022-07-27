@@ -75,6 +75,8 @@ class Replacer(object):
         while not self.terminated:
             # Read live motion data from Rokoko
             data, addr = self.networkManager.Receive()
+            if data is None:
+                continue
             data = json.loads(data)
             # print(data)
 
