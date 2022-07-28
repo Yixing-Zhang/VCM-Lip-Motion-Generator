@@ -85,11 +85,12 @@ class Replacer(object):
             if data is None:
                 if time.time() > timeout:
                     print("No incoming motion data. Please check Rokoko Studio live streaming configuration.\n", end='')
+                    timeout = time.time() + 5
                     if self.enabled:
                         print("Timeout after no receiving for 5 seconds. Disabling replacer.")
                         self.Disable()
                 continue
-                
+
             timeout = time.time() + 5
             data = json.loads(data)
             # print(data)
