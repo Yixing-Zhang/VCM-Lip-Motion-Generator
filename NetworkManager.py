@@ -49,8 +49,8 @@ class NetworkManager(object):
 
     def Receive(self):
         data = None
-        read_sockets, write_sockets, error_sockets = select.select([self.receiveSock], [], [])
-        if read_sockets:
+        ready = select.select([self.receiveSock], [], [], 1.0)
+        if ready[0]:
             # incoming message from remote server
             data = self.receiveSock.recvfrom(self.pktLen)
         return data
