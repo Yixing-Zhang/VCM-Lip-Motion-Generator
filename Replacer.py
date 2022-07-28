@@ -81,8 +81,8 @@ class Replacer(object):
 
         while not self.terminated:
             # Read live motion data from Rokoko
-            data, addr = self.networkManager.Receive()
-            if data is None:
+            received = self.networkManager.Receive()
+            if received is None:
                 if time.time() > timeout:
                     print("No incoming motion data. Please check Rokoko Studio live streaming configuration.\n", end='')
                     timeout = time.time() + 5
@@ -92,6 +92,8 @@ class Replacer(object):
                 continue
 
             timeout = time.time() + 5
+            data = received[0]
+            addr = received[1]
             data = json.loads(data)
             # print(data)
 
