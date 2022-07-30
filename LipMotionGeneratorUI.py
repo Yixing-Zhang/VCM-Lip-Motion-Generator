@@ -4,9 +4,9 @@ import pyaudio
 import Replacer
 
 
-class Form(QDialog):
+class LipMotionGeneratorUI(QDialog):
     def __init__(self, parent=None):
-        super(Form, self).__init__(parent)
+        super(LipMotionGeneratorUI, self).__init__(parent)
         layout = QVBoxLayout()
         self.resize(500, 200)
         self.setWindowTitle("choose")
@@ -73,6 +73,6 @@ class Form(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    btnDemo = Form()
+    btnDemo = LipMotionGeneratorUI()
     btnDemo.show()
     sys.exit(app.exec_())
