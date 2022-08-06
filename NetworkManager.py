@@ -15,7 +15,7 @@ class NetworkManager(object):
     # UDP Networking
     host = '127.0.0.1'
     serverIP = '16.162.92.84'
-    pktLen = 2048
+    pktLen = 20480
 
     # Ports
     sendPort = 1251
@@ -34,7 +34,7 @@ class NetworkManager(object):
             cls.__species = object.__new__(cls)
         return cls.__species
 
-    def __init__(self, host='127.0.0.1', serverIP='16.162.92.84', pktLen=2048, sendPort=1251, receivePort=1250):
+    def __init__(self, host='127.0.0.1', serverIP='16.162.92.84', pktLen=20480, sendPort=1251, receivePort=1250):
         if self.__first_init:
             self.host = host
             self.serverIP = serverIP
@@ -65,7 +65,7 @@ class NetworkManager(object):
     def Send(self, data):
         data = lz4.frame.compress(data)
         self.sendSock.sendto(data, self.local)
-        self.sendSock.sendto(data, self.serverIP)
+        # self.sendSock.sendto(data, (self.serverIP, 1234))
 
     def Terminate(self):
         # Close the sockets

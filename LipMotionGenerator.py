@@ -35,7 +35,7 @@ class LipMotionGenerator(object):
             self.generateThread = threading.Thread(target=self.GenerateLipMotion)
             self.lock = threading.Lock()
             self.ds_fname = "./voca/ds_graph/deepspeech-0.5.0-models/output_graph.tflite"
-            self.tf_model_fname = "xxxx"
+            self.tf_model_fname = "./voca/model/gstep_134310.model"
 
             self.__class__.__first_init = False
 
