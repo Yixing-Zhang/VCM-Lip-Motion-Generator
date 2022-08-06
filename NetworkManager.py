@@ -1,5 +1,6 @@
 from socket import *
 import select
+import lz4.frame
 
 
 class NetworkManager(object):
@@ -62,6 +63,7 @@ class NetworkManager(object):
         return data
 
     def Send(self, data):
+        data = lz4.frame.compress(data)
         self.sendSock.sendto(data, self.local)
         self.sendSock.sendto(data, self.serverIP)
 
