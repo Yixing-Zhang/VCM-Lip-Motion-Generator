@@ -7,6 +7,69 @@ import numpy as np
 from voca.utils.inference import inference_realtime
 
 
+def array2dict(blendshape):
+    nameMap = [
+        "browInnerUp",  #(browInnerUp_L + browInnerUp_R) / 2
+        "browDownLeft",  #browDown_L
+        "eyeBlinkLeft",          #eyeBlink_L
+        "eyeSquintLeft",       #"eyeSquint_L",
+        "eyeWideLeft",        #"eyeWide_L",
+        "eyeLookUpLeft",      #"eyeLookUp_L",
+        "eyeLookOutLeft",      #"eyeLookOut_L",
+        "eyeLookInLeft",        #"eyeLookIn_L",
+        "eyeLookDownLeft",       #"eyeLookDown_L",
+        "noseSneerLeft",     #noseSneer_L",
+        "mouthUpperUpLeft",    #"mouthUpperUp_L",
+        "mouthSmileLeft",    #"mouthSmile_L",
+        "mouthLeft",        #"mouthLeft"
+        "mouthFrownLeft", #"mouthFrown_L",
+        "mouthLowerDownLeft", #"mouthLowerDown_L",
+        "jawLeft", #jawLeft
+        "cheekPuff", #cheekPuff
+        "mouthShrugUpper", #mouthShrugUpper
+        "mouthFunnel", #mouthFunnel
+        "mouthRollLower", #mouthRollLower
+        "jawOpen", #jawOpen
+        "tongueOut", #tongueOut
+        "mouthPucker", #mouthPucker
+        "mouthRollUpper", #mouthRollUpper
+        "jawRight",     #jawRight
+        "mouthLowerDownRight",  #"mouthLowerDown_R",
+        "mouthFrownRight",      #mouthFrown_R,
+        "mouthRight",           #mouthRight
+        "mouthSmileRight",       #"mouthSmile_R",
+        "mouthUpperUpRight",     #"mouthUpperUp_R",
+        "noseSneerRight",   #noseSneer_R
+        "eyeLookDownRight",  #eyeLookDown_R
+        "eyeLookInRight",   #eyeLookIn_R
+        "eyeLookOutRight", #eyeLookOut_R
+        "eyeLookUpRight", #eyeLookUp_R
+        "eyeWideRight", #eyeWide_R
+        "eyeSquintRight", #eyeSquint_R
+        "eyeBlinkRight", #eyeBlink_R
+        "browDownRight", #browDown_R
+        "browOuterUpRight", #browOuterUp_R
+        "jawForward",
+        "mouthClose", 
+        "mouthDimpleLeft",  
+        "mouthDimpleRight",  
+        "mouthStretchLeft",  
+        "mouthStretchRight",  
+        "mouthShrugLower",  
+        "mouthPressLeft",  
+        "mouthPressRight",  
+        "browOuterUpLeft",  
+        "cheekSquintLeft",  
+        "cheekSquintRight"
+        ] 
+    
+    ret = dict()
+    for j in range(52):
+        if j < 40:
+            ret[nameMap[j]] = float(blendshape[j]) * 100
+        else:
+            ret[nameMap[j]] = 0
+    return ret
 class LipMotionGenerator(object):
     """
     This class generates lip motion data.
@@ -70,7 +133,7 @@ class LipMotionGenerator(object):
             return self.motionQueue.get_nowait()
         else:
             return None
-
+    
     def GenerateLipMotion(self):
         previous_state_c = np.zeros([1, 2048], dtype=np.float32)
         previous_state_h = np.zeros([1, 2048], dtype=np.float32)
@@ -79,7 +142,7 @@ class LipMotionGenerator(object):
             # related to lip motion), other data fields are useless
 
             # Audio Stream
-            audio_data = self.audioStream.read(14700)
+            audio_data = self.audioStream.read(14700) # 1/3 * frame rate
             decode_data = np.frombuffer(audio_data, 'int16')
             lipMotion, previous_state_c, previous_state_h = inference_realtime(self.tf_model_fname, self.ds_fname,
                                                                                decode_data, 44100, previous_state_c,
@@ -91,4 +154,4 @@ class LipMotionGenerator(object):
             # Logic for generating lip motion
             if not self.motionQueue.full():
                 for i in range(lipMotion.shape[0]):
-                    self.motionQueue.put_nowait(lipMotion[i])
+                    self.motionQueue.put_nowait(array2dict(lipMotion[i]))
