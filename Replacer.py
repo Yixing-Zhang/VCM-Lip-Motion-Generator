@@ -95,7 +95,7 @@ class Replacer(object):
             data = received[0]
             addr = received[1]
             data = json.loads(data)
-            print(data)
+            # print(data)
 
             # If to replace
             if self.enabled:
@@ -106,10 +106,13 @@ class Replacer(object):
 
                 # Replace live motion facial data with generated data
                 if generatedData is not None:
-                    data["scene"]["actors"][0]["face"] = generatedData
+                    # print(data)
+                    for key in generatedData:
+                        data["scene"]["actors"][0]["face"][key] = generatedData[key]
                     # print(data)
 
             # Send final motion data
+            # print(data)
             data = json.dumps(data).encode()
             self.networkManager.Send(data)
             self.frame_count += 1
