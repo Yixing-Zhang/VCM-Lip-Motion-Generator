@@ -1,4 +1,10 @@
 # VCM-Lip-Motion-Generator
+## repo clone
+
+```
+git clone git@github.com:Yixing-Zhang/VCM-Lip-Motion-Generator.git --recursive 
+cd VCM-Lip-Motion-Generator
+```
 
 ## model download 
 Download the pretrained DeepSpeech model (v0.5.0) from [Mozilla/DeepSpeech](https://github.com/mozilla/DeepSpeech/releases/download/v0.5.0/deepspeech-0.5.0-models.tar.gz) (i.e. deepspeech-0.5.0-models.tar.gz).
