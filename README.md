@@ -22,3 +22,7 @@ And unzip it in folder ./voca/ds_graph.
 
 Download the pretrained model from [pretrained model oneDrive sharing link](https://connecthkuhk-my.sharepoint.com/:u:/g/personal/ljt2021_connect_hku_hk/EfHFNnrI2N5GslR_JAGXgf8BSCka2EOIcnp_xdxbZQkhWQ?e=yuVKpV) (i.e. model.zip)
 And unzip it in folder ./voca/model
+
+## lip-sync model
+for training and inferencing the lip-sync model, jump to the submodule [voca](https://github.com/Jeret-Ljt/voca/)
+
