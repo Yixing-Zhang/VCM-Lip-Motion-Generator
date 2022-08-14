@@ -17,6 +17,7 @@ class Replacer(object):
 
     networkManager = None
     lipMotionGenerator = None
+    UI = None
 
     forwardThread = None
 
@@ -33,6 +34,7 @@ class Replacer(object):
         if self.__first_init:
             self.networkManager = NetworkManager.NetworkManager()
             self.lipMotionGenerator = LipMotionGenerator.LipMotionGenerator()
+            self.UI = None
             self.forwardThread = threading.Thread(target=self.ReplaceAndForward)
             self.frame_count = 0
             self.enabled = False
@@ -88,7 +90,12 @@ class Replacer(object):
                     timeout = time.time() + 5
                     if self.enabled:
                         print("Timeout after no receiving for 5 seconds. Disabling replacer.\n", end='')
-                        self.Disable()
+                        if self.Disable():
+                            self.UI.btn1.setText("Enable")
+                            self.UI.btn1.setChecked(True)
+                        else:
+                            self.UI.btn1.setText("Disable")
+                            self.UI.btn1.setChecked(False)
                 continue
 
             timeout = time.time() + 5

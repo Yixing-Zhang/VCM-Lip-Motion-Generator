@@ -12,6 +12,7 @@ class LipMotionGeneratorUI(QDialog):
         self.setWindowTitle("choose")
 
         self.Replacer = Replacer.Replacer()
+        self.Replacer.UI = self
         self.Replacer.Start()
 
         self.btn1 = QPushButton("Enable")

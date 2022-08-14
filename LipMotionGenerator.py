@@ -111,6 +111,7 @@ class LipMotionGenerator(object):
         else:
             self.enabled = True
             self.motionQueue.queue.clear()
+            self.generateThread = threading.Thread(target=self.GenerateLipMotion)
             self.generateThread.start()
             print("Enabled Lip Motion Generator.")
 
@@ -119,7 +120,7 @@ class LipMotionGenerator(object):
     def Disable(self):
         self.enabled = False
         self.motionQueue.queue.clear()
-        self.generateThread.join()
+        self.generateThread.join(5)
         print("Disabled Lip Motion Generator.")
         return True
 
